@@ -1,0 +1,44 @@
+<% layout('layout') -%>
+<form class="form-horizontal" role="form" method="post" id="updateform">
+    <input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+	<div class="col-md-7">
+		<h1 class="text-center">purchase update</h1>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>purchase number</th>
+					<th>product number</th>
+					<th>product description</th>
+					<th>purchase quantity</th>
+					<th>purchase per price</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><%=row[0].purchase_no%></td>
+					<td><input style="width: 150px" class="form-control "
+						name="product_no" id="product_no" type="test"
+						value="<%=row[0].product_no%>"></td>
+					<td><input style="width: 400px" class="form-control "
+						name="product_desc" id="product_desc" type="text"
+						value="<%=row[0].product_desc%>"></td>
+					<td><input style="width: 120px" class="form-control "
+						onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+						onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"
+						maxlength="6" name="purchase_quantity" id="purchase_quantity"
+						type="text" value="<%=row[0].purchase_quantity%>"> </td>
+					<td><input style="width: 120px" class="form-control "
+						onkeyup="this.value=this.value.replace(/[^.0-9]/g,'')"
+						onafterpaste="this.value=this.value.replace(/[^.0-9]/g,'')"
+						maxlength="18" name="purchase_price" id="purchase_price"
+						type="text" value="<%=row[0].purchase_price%>"></td>
+				</tr>
+			</tbody>
+		</table>
+		<div>
+			<input id="newRequest" style="width: 250px"
+				class="btn btn-lg btn-primary btn-block" type="submit"
+				value="update">
+		</div>
+	</div>
+</form>

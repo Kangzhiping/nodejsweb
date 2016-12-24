@@ -1,0 +1,92 @@
+<nav class="nav navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="<%=apphome%>/purchase/query">Cocos</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <%var n=0;
+                var dropdown=false;
+            %>
+            <%if(user.group=='Buyer'){%>
+            <ul class="nav navbar-nav">
+                <li><a href="<%=apphome%>/purchase/create">New request</a></li>
+            </ul>
+            <%n++;%>
+            <%}%>
+            <ul class="nav navbar-nav">
+                <%for(var i in purchaseStatusList){%>
+                    <%if(n>3&&!dropdown){%>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">More<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                    <%dropdown=true;}%>
+                    <%var pstat=purchaseStatusList[i];
+                      if(user.group=='Buyer'||user.group=='Administrator'||pstat=='Published'||
+                        (user.group=='Manager'&&(pstat=='Drafted'||pstat=='Submitted'||pstat=='Approved'||pstat=='Confirmed'||pstat=='Completed'||pstat=='Cancel'))||
+                        (user.group=='Supplier'&&(pstat=='Confirmed'||pstat=='Completed'||pstat=='Cancel'))
+                    ){%>
+                    <li><a href="<%=apphome%>/purchase/query?status=<%=i%>"><%=purchaseStatusList[i]%></a></li>
+                    <%n++;%>
+                    <%}%>
+                <%}%>
+                <%if(dropdown){%>
+                    </ul>
+                </li>
+                <%}%>
+            </ul>
+            <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">Categories<span class="caret"></span></a>
+
+                    <ul class="dropdown-menu">
+                        <% for(var p in productCategory){%>
+                        <li><a href="#"><%=productCategory[p]%></a></li>
+                        <%};%>
+                    </ul>
+                </li>
+
+                <% if (!user) { %>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">Signup / Login <span class="caret"></span></a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="<%=apphome%>/user/register">Signup</a></li>
+                        <li><a href="<%=apphome%>/user/login">Login</a></li>
+                    </ul>
+                </li>
+                <% } else { %>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+                        <%= user.username %><span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="<%=apphome%>/user">Profile</a></li>
+                        <li><a href="<%=apphome%>/user/change">Change Password</a></li>
+                        <li><a href="<%=apphome%>/user/logout">Logout</a></li>
+                        <%if(user.group=='Administrator'){%>
+                        <li><a href="<%=apphome%>/user/list">Users</a></li>                        
+                        <%}%>
+                    </ul>
+                </li>
+                <li><a href="<%=apphome%>/cart" class="glyphicon glyphicon-shopping-cart"><span class="badge">0</span></a></li>
+                <% } %>
+            </ul>
+
+        </div>
+    </div>
+</nav>

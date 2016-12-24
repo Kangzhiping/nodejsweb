@@ -1,0 +1,43 @@
+<% layout('layout') -%>
+<div>
+	<h2 class="text-center"><%=heading%></h2>
+    <table class='table table-striped'>
+        <thead>
+            <tr>
+                <th>create_date</th>
+                <th>purchase_no</th>
+                <th>product_desc</th>
+                <th>purchase_quantity</th>
+                <th>purchase_price</th>
+                <th>create_person</th>
+                <%if(!status){%>
+                <th>status</th>
+                <%}%>
+                <%if(user.group=='Administrator'){%>
+                <th>Action</th>
+                <%}%>
+            </tr>
+        </thead>
+        <tbody>
+            <%for(var k in rows){%>
+            <tr>
+                <td class='text-info'><%=rows[k].create_date%></td>
+                <td class='text-info'><a href="<%=apphome%>/purchase/query?id=<%=rows[k].purchase_no%>"><%=rows[k].purchase_no%></a></td>
+                <td><pre class='text-info' style="border:0;background-color:transparent;margin:0;padding:0;"><%=rows[k].product_desc%></pre></td>
+                <td class='text-info'><%=rows[k].purchase_quantity%></td>
+                <td class='text-info'><%=rows[k].purchase_price%></td>
+                <td class='text-info'><%=rows[k].create_person%></td>
+                <%if(!status){%>
+                <td class='text-info'><%=purchaseStatusList[rows[k].status]%></td>
+                <%}%>
+                <td>
+                <%if(user.group=='Administrator'){%>
+                    <a class="glyphicon glyphicon-edit" href="<%=apphome%>/purchase/update?id=<%=rows[k]['purchase_no']%>"data-toggle="tooltip" title="Edit"></a>
+                <%}%>
+                    <a class="glyphicon glyphicon-eye-open" href="<%=apphome%>/purchase/query?id=<%=rows[k].purchase_no%>"data-toggle="tooltip" title="View"></a>
+                </td>
+            </tr>
+            <%}%>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,155 @@
+<% layout('layout') -%>
+    <div class="container">
+        <form class="form-horizontal" role="form" method="post" id="regform">
+            <input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+            <div class="form-group">
+                <label for="inputName" class="col-sm-2 control-label"></label>
+                <div class="col-sm-8">
+                <legend>Please input all information required:</legend>
+                <%- message %>
+                    <span id="respMsg"></span><span id="num" class="bg-danger" style="color:red"></span><span id="respMsg2"
+                        class="bg-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputName" class="col-sm-2 control-label">Your Name</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="inputName" placeholder="your name" required>
+                    <span id="inputNameErr"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPhone" class="col-sm-2 control-label">Your Phone</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="inputPhone" placeholder="your phone number" required>
+                    <span id="inputPhoneErr"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label">Email Address</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Email" required>
+                    <span id="inputEmailErr"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="col-sm-2 control-label">Your Password</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Password" required>
+                    <span id="inputPasswordErr"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword2" class="col-sm-2 control-label">Confirm Password</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" id="inputPassword2" placeholder="confirm password" required>
+                    <span id="inputPassword2Err"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 text-right">
+                    <img alt="Question" onclick="javascript:this.src='<%=question%>?v='+Math.random();" height="34" src="<%=question%>"/>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="inputAnswer" placeholder="input captcha in the picture. You can click the picture to refresh the captcha." required>
+                    <span id="inputAnswerErr"></span>
+                </div>     
+                
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-8">
+                    <input id="inputBtn" class="btn btn-lg btn-primary btn-block" type="button" value="Sign up" onclick="javascript:register();">
+                    <a href="<%=apphome%>/user/login" class="btn  btn-success btn-block">Sign in</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="<%=apphome%>/js/jsonrpc.js"></script>
+    <script>
+    $(document).ready(function () {        
+        function showMsg(resp,field_id){
+            field=resp[field_id];
+            var obj=$('#'+field_id+'Err');
+            obj.text(field.text);
+            //obj.removeClass('bg-primary bg-success bg-info bg-warning bg-danger');
+            //obj.addClass('bg-'+field.level);
+            obj.removeClass('text-primary text-success text-info text-warning text-danger');
+            obj.addClass('text-'+field.level);
+        }
+        register = function () {
+            params={
+                inputName:$("#inputName")[0].value,
+                inputPhone:$("#inputPhone")[0].value,
+                inputEmail:$("#inputEmail")[0].value,
+                inputPassword:$("#inputPassword")[0].value,
+                inputPassword2:$("#inputPassword2")[0].value,
+                inputAnswer:$("#inputAnswer")[0].value
+            };
+            rpc=new jsonrpc();
+            req=rpc.request(1,"register",JSON.stringify(params));
+            $("#respMsg").text("");
+            $("#inputNameErr").text("");
+            $("#inputPhoneErr").text("");
+            $("#inputEmailErr").text("");
+            $("#inputPasswordErr").text("");
+            $("#inputPassword2Err").text("");
+            $("#inputAnswerErr").text("");
+            $.ajax({
+                type: "POST",
+                url:"<%=apphome%>/api/user",
+                async: true,
+                cache: false,
+                dataType: "json",
+                data:req,
+                beforeSend: function(xhr){  
+                    xhr.setRequestHeader('x-csrf-token', '<%=csrfSecret%>');  
+                },  
+                success: function (response, textStatus) {
+                    message=response.result.message;
+                    console.log(response);
+                    showMsg(message,"inputName");
+                    showMsg(message,"inputPhone");
+                    showMsg(message,"inputEmail");
+                    showMsg(message,"inputPassword");
+                    showMsg(message,"inputPassword2");
+                    showMsg(message,"inputAnswer");
+                   if(response.result.status){
+                        $("#inputName").attr("disabled","disabled");
+                        $("#inputPhone").attr("disabled","disabled");
+                        $("#inputEmail").attr("disabled","disabled");
+                        $("#inputPassword").attr("disabled","disabled");
+                        $("#inputPassword2").attr("disabled","disabled");
+                        $("#inputAnswer").attr("disabled","disabled");
+                        $("#inputBtn").attr("disabled","disabled");                       
+                        function jump(count){
+                            $('#respMsg').addClass('text-success');
+                            $('#respMsg').text('Successful! Will direct to login page in ');
+                            $('#num').text(count);    
+                            $('#respMsg2').text(' seconds');    
+                            setTimeout(function(){
+                               count--;    
+                                if(count > 0) {    
+                                    $('#num').text(count);    
+                                    jump(count);    
+                                } else {                                        
+                                    location.href="<%=apphome%>/user/login?email="+params.inputEmail+"&password="+params.inputPassword;    
+                                }   
+                            },1000); 
+                        }
+                        jump(5);
+                    }else{
+                        $('#respMsg').addClass('text-danger');
+                        $('#respMsg').text("Request failed! Pls. check your input!");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#respMsg').addClass('text-danger');
+                    $("#respMsg").text(jqXHR.readyState + " " + jqXHR.status + " " + jqXHR.statusText + " " + textStatus);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+        };
+    });
+    </script>

@@ -1,0 +1,27 @@
+<% include partials/header.html %>
+<div class="container">
+    <% include partials/navbar.html %>
+    <%- body -%>
+    <nav class="nav" id="copyright">
+        <footer class="bottom">
+            <p  class="text-center">Cocos System &copy; 2016 IBM</p>
+        </footer>
+    </nav>
+</div>
+<script>
+var adjustcopyright=function(){
+    if($(window).height()==$(document).height()){
+        $("#copyright").addClass("navbar-fixed-bottom");
+    }
+    else{
+       $("#copyright").removeClass("navbar-fixed-bottom");
+    }
+};
+$(document).ready(function () {        
+    adjustcopyright();
+    $(window).resize(function() {
+        adjustcopyright();
+    });
+});
+</script>
+<% include partials/footer.html %>

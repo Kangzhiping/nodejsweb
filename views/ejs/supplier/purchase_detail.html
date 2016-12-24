@@ -1,0 +1,26 @@
+<% layout('layout') -%>
+<div class='container table-responsive'>
+	<h2 class="text-center"><%=heading%></h2>
+<%for(var k in rows){%>
+    <table class='table table-bordered'>
+        <tbody>
+    <%var needconfirm=false;%>
+    <%for (var f in rows[k]){%>
+            <%if(f=='status'){%>
+            <tr><td class='h4'><%=f%></td><td class='text-info'><%=purchaseStatusList[rows[k][f]]%></td></tr>
+            <%if(purchaseStatusList[rows[k][f]]=='Published') needconfirm=true;%>
+            <%}else{%>
+            <tr><td class='h4'><%=f%></td><td class='text-info'><%=rows[k][f]%></td></tr>
+            <%}%>
+    <%}%>
+        </tbody>
+    </table>
+    <%if(needconfirm){%>
+    <form class="form-horizontal" role="form" method="post" action="<%=apphome%>/purchase/confirm?id=<%=rows[k]['purchase_no']%>">
+        <input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+        <button type="submit" class="btn  btn-success btn-block" >Confirm</button>
+    </form>
+    <%}%>
+<%}%>
+    <h2 class="text-warning"><%=resp%></h2>
+</div>

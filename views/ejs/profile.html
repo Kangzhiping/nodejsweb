@@ -1,0 +1,65 @@
+<% layout('layout') -%>
+
+<div class="container">
+
+	<div class="row">
+		<div class="col-sm-7 col-md-3">
+			<H2> </H2>
+			<img src="<%=apphome%>/img/user.png" class="img-circle img-responsive img-center" alt="">
+			<H3><%= username %></H3>
+			<p>Group: <span  class="text-info"><%= group %></span></p>
+			<p>Email: <span  class="text-info"><%= email %></span></p>
+			<% if(phone === "" || typeof phone === 'undefined') { %>
+				<p>Phone: <span class="text-warning">You have no phone</span></p>
+			<% } else { %>
+				<p>Phone: <span  class="text-info"><%= phone %></span></p>	
+			<% } %>
+			<% if(address === "" || typeof address === 'undefined') { %>
+				<p>Address: <span  class="text-warning">You have no address</span></p>
+			<% } else { %>
+				<p>Address: <span  class="text-info"><%= address %></span></p>	
+			<% } %>
+			<% if(country === "" || typeof country === 'undefined') { %>
+				<p>Country: <span  class="text-warning">You have no country</span></p>
+			<% } else { %>
+				<p>Country: <span  class="text-info"><%= country %></span></p>	
+			<% } %>
+			<% if(company === "" || typeof company === 'undefined') { %>
+				<p>Company: <span  class="text-warning">You have no company</span></p>
+			<% } else { %>
+				<p>Company: <span  class="text-info"><%= company %></span></p>	
+			<% } %>
+
+			<p>
+				<a href="<%=apphome%>/user/edit-profile" class="btn btn-primary btn-lg">Edit Profile</a>
+			</p>
+		</div>
+
+		<div class="col-md-7">
+			<h2 class="text-center">Purchase History</h2>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Product</th>
+						<th>Price</th>
+						<th>Count</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+				<%for(var i in rows){%>
+					<tr>
+						<td class='text-info'><%=rows[i].create_date%></td>
+		                <td><pre class='text-info' style="border:0;background-color:transparent;margin:0;padding:0;"><%=rows[i].product_desc%></pre></td>
+						<td class='text-info'><%=rows[i].purchase_price%></td>
+						<td class='text-info'><%=rows[i].purchase_quantity%></td>
+						<td class='text-info'><%=purchaseStatusList[rows[i].status]%></td>
+					</tr>
+				<%}%>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>

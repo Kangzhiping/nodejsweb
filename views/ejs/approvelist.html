@@ -1,0 +1,59 @@
+<% layout('layout') -%>
+<div class='container table-responsive'>
+	<h2 class="text-center"><%=heading%></h2>
+       </div>
+		<table class="table">
+			<tr>
+				<th>Order Number</th>
+				<th>Product	Number</th>
+				<th>Product	Desp</th>
+				<th>Order Quantity</th>
+				<th>Order Price</th>
+				<th>Created Employee</th>
+				<th>Order Created Date</th>
+				<th>Order Status</th>
+				<th>Action</th>
+			</tr>
+			<%for(var i in rows){%>
+			<tr>
+				<td><%=rows[i].purchase_no%></td>
+				<td><%=rows[i].product_no%></td>
+				<td><%=rows[i].product_desc%></td>
+				<td><%=rows[i].purchase_quantity%></td>
+				<td><%=rows[i].purchase_price%></td>
+				<td><%=rows[i].create_person%></td>
+				<td><%=rows[i].create_date%></td>
+				
+				<%if (rows[i].status=='1') {%>
+					<td>Pending For Approval</td>
+				<%}else if(rows[i].status=='3') {%>
+					<td>Approved</td>
+				<%}else if(rows[i].status=='4') {%>
+					<td>Published</td>		
+				<%}else if(rows[i].status=='5') {%>
+					<td>Confirmed</td>		
+				<%}else if(rows[i].status=='6') {%>
+					<td>Completed</td>
+				<%}%>
+					
+				<%if(rows[i].status=='1'){%>
+					<td style="margin:0;padding:0">
+						<div class="row" style="margin:0;padding:0">
+						<form class="col-md-5" style="margin:0;padding:0" role="form" method="post" action="<%=apphome%>/purchase/approve?id=<%=rows[i].purchase_no%>">
+							<input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+							<button type="submit" class="btn  btn-link glyphicon glyphicon-ok" data-toggle="tooltip" title="Accept"></button>
+						</form>
+						<form  class="col-md-5" style="margin:0;padding:0" role="form" method="post" action="<%=apphome%>/purchase/reject?id=<%=rows[i].purchase_no%>">
+							<input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+							<button type="submit" class="btn  btn-link glyphicon glyphicon-remove" data-toggle="tooltip" title="Reject"></button>
+						</form>																
+						</div>
+					</td>
+				<%}%>										
+			</tr>
+			<% } %>
+		
+
+		</table>
+    </div>
+  </div>

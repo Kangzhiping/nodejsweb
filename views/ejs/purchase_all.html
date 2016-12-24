@@ -1,0 +1,100 @@
+<% layout('layout') -%>
+<div>
+	<h1 class="text-center"><%=header%></h1>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<%if (status == 0 || status == 3 || status == 5 ||status == 7) {%>
+				<th>action</th> <%}%>
+				<th>purchase number</th>
+				<th>product number</th>
+				<th>product description</th>
+				<th>purchase quantity</th>
+				<th>status</th>
+				<th>purchase price</th>
+				<th>create person</th>
+				<th>create date</th>
+				<th>approval person</th>
+				<th>approval date</th>
+				<th>vendor</th>
+				<th>vendor accept date</th>
+				<th>update person</th>
+				<th>update date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<%for(var i = 0; i < rows.length; i ++){%>
+			<tr>
+				<%if (status == 0) {%>
+				<th>
+					<form class="form-horizontal" role="form" method="post"
+						id="updateform"
+						action="<%=apphome%>/purchase/submit?purchase_no=<%=rows[i].purchase_no%>&&action=1">
+						<input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+						<input id="submit" style="width: 80px; color: red" type="submit"
+							value="submit">
+					</form>
+					<form class="form-horizontal" role="form" method="post"
+						id="updateform"
+						action="<%=apphome%>/purchase/cancel?purchase_no=<%=rows[i].purchase_no%>&&action=2">
+						<input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+						<input id="cancel" style="width: 80px; color: red" type="submit"
+							value="cancel"> 
+					</form>	
+					<a href="<%=apphome%>/purchase/update?purchase_no=<%=rows[i].purchase_no%>&&action=3">
+							<input id="update" style="width: 80px" type="button"
+							value="update">
+					</a>
+				</th> <%}%> <%if (status == 3) {%>
+				<th><form class="form-horizontal" role="form" method="post"
+						id="updateform"
+						action="<%=apphome%>/purchase/publish?purchase_no=<%=rows[i].purchase_no%>&&action=5">
+						<input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+						<input id="publish" style="width: 80px; color: red" type="submit"
+						value="publish">
+				</form></th> <%}%> <%if (status == 5) {%>
+				<th><form class="form-horizontal" role="form" method="post"
+						id="updateform"
+						action="<%=apphome%>/purchase/complete?purchase_no=<%=rows[i].purchase_no%>&&action=6">
+						<input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+						<input id="complete" style="width: 80px; color: red" type="submit"
+						value="complete">
+				</form></th> <%}%> <%if (status == 7) {%>
+				<th><form class="form-horizontal" role="form" method="post"
+						id="updateform"
+						action="<%=apphome%>/purchase/recall?purchase_no=<%=rows[i].purchase_no%>&&action=4">
+						<input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+						<input id="recall" style="width: 80px; color: red" type="submit"
+						value="recall">
+				</form></th> <%}%>
+				<td><%=rows[i].purchase_no%></td>
+				<td><%=rows[i].product_no%></a></td>
+				<td><%=rows[i].product_desc%></td>
+				<td><%=rows[i].purchase_quantity%></td>
+				<td><%=rows[i].status%></td>
+				<td><%=rows[i].purchase_price%></td>
+				<td><%=rows[i].create_person%></td>
+				<td><%=rows[i].create_date%></td>
+				<td><%=rows[i].approval_person%></td>
+				<td><%=rows[i].approval_date%></td>
+				<td><%=rows[i].vendor%></td>
+				<td><%=rows[i].vendor_accept_date%></td>
+				<td><%=rows[i].update_person%></td>
+				<td><%=rows[i].update_date%></td>
+			</tr>
+			<%}%>
+		</tbody>
+	</table>
+	<%if (status in [0,1,2,3,4,5,6,7]) {%>
+	<div>
+		<a href="<%=apphome%>/purchase/query?status=<%=status%>&&page=-1">prev
+			page</a> <a href="<%=apphome%>/purchase/query?status=<%=status%>&&page=1">next
+			page</a>
+	</div>
+	<%} else {%>
+	<div>
+		<a href="<%=apphome%>/purchase/query?page=-1">prev page</a> <a
+			href="<%=apphome%>/purchase/query?page=1">next page</a>
+	</div>
+	<%}%>
+</div>

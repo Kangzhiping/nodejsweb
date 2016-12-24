@@ -1,0 +1,82 @@
+<% layout('layout') -%>
+    <div class="container">
+        <form class="form-horizontal" role="form" method="post" id="updateform" action="<%=apphome%>/user/update<%if(id){%>?id=<%=id%><%}%>">
+            <input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-8">
+                    <legend>User Profile</legend>
+                    <span class="text-<%=resp.status.level%>"><%=resp.status.text%></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-8">
+                    <%if(!id){%>
+                        <input type="text" class="form-control " value="<%=email%>" disabled>
+                    <%}else{%>
+                        <input id="inputEmail" name="inputEmail" type="text" class="form-control " value="<%=email%>">
+                    <%}%>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Group</label>
+                <div class="col-sm-8">
+                    <%if(!id){%>
+                    <input type="text" class="form-control " value="<%=grouplist[group]%>" disabled>
+                    <%}else{%>
+                    <select id="inputGroup" class="form-control" name="inputGroup" placeholder="group">
+                    <% for(var c in grouplist){ %>
+                    <option value='<%=c%>' <%if(c==group){%> selected <%}%>><%=grouplist[c]%></option>
+                    <% }; %>
+                    </select>
+                    <%}%>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputName" class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="inputName" placeholder="your name" required value="<%=username%>">
+                    <span id="inputNameErr" class="text-<%=resp.inputName.level%>"><%=resp.inputName.text%></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPhone" class="col-sm-2 control-label">Phone</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="inputPhone" placeholder="your phone number" required value="<%=phone%>">
+                    <span id="inputPhoneErr" class="text-<%=resp.inputPhone.level%>"><%=resp.inputPhone.text%></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputCountry" class="col-sm-2 control-label">Country</label>
+                <div class="col-sm-8">
+                    <select id="inputCountry" class="form-control" name="inputCountry" placeholder="your country">
+                    <% for(var c in countrylist){ %>
+                    <option value='<%=c%>' <%if(c==country){%> selected <%}%>> <%=c%> - <%=countrylist[c].short_en%></option>
+                    <% }; %>
+                    </select>
+                    <span id="inputCountryErr"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAddr" class="col-sm-2 control-label">Address</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="inputAddr" placeholder="your address" required value="<%=address%>">
+                    <span id="inputAddrErr"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputCompany" class="col-sm-2 control-label">Company</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="inputCompany" placeholder="your company" required value="<%=company%>">
+                    <span id="inputCompanyErr"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-8">
+                    <input id="inputBtn" class="btn btn-lg btn-primary btn-block" type="submit" value="Update">
+                </div>
+            </div>
+        </form>
+    </div>

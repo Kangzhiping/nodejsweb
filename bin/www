@@ -1,0 +1,147 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('nodejsweb:server');
+var http = require('http');
+var https = require('https');
+var fs = require('fs');
+/*
+Can use openssl to create a self sign ca:
+A. Generate root ca:
+1: openssl genrsa -out ca-key.pem 8192 -des 1024
+2: openssl req -sha256 -new -x509 -days 3650 -key rootca.key -out rootca.crt
+B. Generate server ca:
+1: openssl genrsa -out server.key 4096
+2: openssl req -new -key server.key -config rootca.ini -out server.csr  (can use all default values)
+3: openssl x509 -sha256 -req -CA rootca.crt -CAkey rootca.key -CAcreateserial -in server.csr -out server.crt -extensions v3_req -extfile rootca.ini
+C. Add the rootca to trusted root
+1. IE/Chrome - install the rootca to trusted root (select manually)
+2. Firefox - go to Tools->Options->Advanced->View Certificates->Authorities to import the rootca
+ */
+var ticketKeysBuffer=new Buffer('!%DJ<OP(O*%$#Q%AZTJYXJK{T:og;horeewqftp:.m<>?LP}');
+var options = {
+  //secureProtocol:'TLSv1_2_method',
+  //ticketKeys:ticketKeysBuffer,
+  //requestCert: true,
+  //rejectUnauthorized:true,
+  //ca: [fs.readFileSync('cert/client.crt')],
+  //pfx: fs.readFileSync('./ssl/server.pfx'),
+  key: fs.readFileSync('cert/server.key'),
+  cert: fs.readFileSync('cert/server.crt')
+};
+/**
+ * Create HTTPS server.
+ */
+var httpsserver = https.createServer(options,app);
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3001');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+//var server = http.createServer(app);
+server=httpsserver;
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/*
+httpsserver.on('newSession', newSession);
+const tlsSessionStore = {};
+function newSession(sessionId,sessionData,callback){
+  tlsSessionStore[sessionId.toString('hex')] = sessionData;
+  console.log("New TLS Session: "+sessionId.toString('hex'));
+  console.log(sessionData.toString('hex'));
+  callback();
+}
+*/
+/*
+httpsserver.on('resumeSession', resumeSession);
+function resumeSession(sessionId,callback){
+  console.log("TLS Session resume: "+sessionId.toString('hex'));
+  callback(null, tlsSessionStore[sessionId.toString('hex')] || null);
+}
+*/
+httpsserver.on('secureConnection', (tlsSocket )=>{
+  //console.log("secureConnection:",tlsSocket.getSession().toString('hex'));
+  //tlsSocket.on("secureConnect",);
+  //console.log(tlsSocket.getPeerCertificate());
+});
+
+
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  console.log('Listening on '+addr.address+' ' + bind+' at '+new Date());
+}

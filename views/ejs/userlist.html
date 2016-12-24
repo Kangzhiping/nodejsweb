@@ -1,0 +1,26 @@
+<% layout('layout') -%>
+<div class="container table-responsive">
+	<h2 class="text-center">User List</h2>
+    <table class='table table-striped'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Group</th>
+                <th>JoinDate</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%for(var k in rows){%>
+            <tr>
+                <td><%=rows[k].id%></td>
+                <td><%=rows[k].username%></td>
+                <td><a href="<%=apphome%>/user/edit-profile?id=<%=rows[k].id%>"><%=rows[k].email%></a></td>
+                <td><%=groupList[rows[k].groupid]%></td>
+                <td><%=rows[k].joindate%></td>
+            </tr>
+            <%}%>
+        </tbody>
+    </table>
+</div>

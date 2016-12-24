@@ -1,0 +1,35 @@
+<% layout('layout') -%>
+<div class='container'>
+	<h2 class="text-center"><%=heading%></h2>
+<%if(rows!=null){%>
+    <%for(var k in rows){%>
+        <form class="form-horizontal" role="form" method="post" id="updateform" action="<%=apphome%>/purchase/update?id=<%=rows[k]['purchase_no']%>">
+        <input type="hidden" name="_csrf" value="<%=csrfSecret%>">
+        <%for (var f in rows[k]){%>
+                <div class="form-group"  style="padding:0;margin:0px 0px 3px 0px;">
+                    <label for="<%=f%>" class="col-sm-2 control-label"><%=f%></label>
+                    <div class="col-sm-8">
+                <%if(f=='status'){%>
+                    <select id="status" class="form-control" name="status">
+                    <%for(var x in purchaseStatusList){%>
+                    <option value="<%=x%>" <%if(x==rows[k][f]){%> selected <% } %>><%=purchaseStatusList[x]%></option>
+                    <%}%>
+                    </select>
+                <%}else if(f=='product_desc'){%>
+                        <textarea class="form-control" name="<%=f%>"><%=rows[k][f]%></textarea>
+                <%}else{%>
+                        <input type="text" class="form-control" name="<%=f%>" value="<%=rows[k][f]%>">
+                <%}%>
+                    </div>
+                </div>
+        <%}%>
+            <div class="form-group"  style="padding:0;margin:0;">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-8">
+                    <button type="submit" class="btn  btn-success btn-block">Update</button>
+                </div>
+            </div>
+        </form>
+    <%}%>
+<%}%>
+</div>
